@@ -1,0 +1,21 @@
+# 编译产物
+/l4d2-rcon-agent
+/l4d2-rcon-agent.exe
+*.exe
+
+# 测试编译产物
+*-test
+*-test.exe
+*-new
+*-new.exe
+
+# 运行时生成的配置（含密码，不要提交）
+config.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
