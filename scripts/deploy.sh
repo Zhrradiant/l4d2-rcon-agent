@@ -119,7 +119,7 @@ rm -f -- "./$BINARY_NAME"
 tar -xzf "$ARCHIVE"
 log "解压完成"
 
-# 定位二进制（压缩包内通常放在 l4d2-rcon-agent_v<版本>_linux_amd64/ 子目录下）
+# 定位二进制
 BIN_PATH="$(find . -maxdepth 2 -type f -name "$BINARY_NAME" | head -1 || true)"
 [[ -n "$BIN_PATH" ]] || die "压缩包中未找到 $BINARY_NAME 二进制"
 

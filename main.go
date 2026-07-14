@@ -19,8 +19,11 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
@@ -768,6 +771,41 @@ func menuStart() {
 		return
 	}
 
+	// Linux：优先用 screen 后台启动
+	if runtime.GOOS == "linux" {
+		if _, err := exec.LookPath("screen"); err == nil {
+			exe, err := os.Executable()
+			if err != nil {
+				fmt.Printf("✗ 获取程序路径失败: %v\n", err)
+				return
+			}
+			exeDir := filepath.Dir(exe)
+			exeName := filepath.Base(exe)
+			cmd := exec.Command("screen", "-dmS", "l4d2-agent",
+				"sh", "-c", fmt.Sprintf("cd %s && ./%s -serve", exeDir, exeName))
+			if err := cmd.Start(); err != nil {
+				fmt.Printf("✗ 启动后台服务失败: %v\n", err)
+				return
+			}
+			fmt.Printf("✓ 服务已在后台启动\n")
+			fmt.Printf("  查看日志: screen -r l4d2-agent\n")
+			fmt.Printf("  退出日志（不停止服务）: 按 Ctrl+A 再按 D\n")
+			fmt.Printf("  停止服务: screen -X -S l4d2-agent quit\n")
+			fmt.Println()
+			os.Exit(0)
+			return
+		}
+		fmt.Println("! 未检测到 screen，以前台模式启动")
+		fmt.Println("  安装 screen 可使用后台模式：apt install screen 或 yum install screen")
+		fmt.Println()
+	}
+
+	// 前台运行（Windows 或 Linux 未装 screen）
+	startForeground(cfg)
+}
+
+// startForeground 启动前台 HTTP 服务（Windows 或 Linux 未装 screen 时使用）
+func startForeground(cfg *Config) {
 	agent := newAgent(cfg)
 
 	mux := http.NewServeMux()

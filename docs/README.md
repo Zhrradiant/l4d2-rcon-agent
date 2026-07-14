@@ -1,6 +1,6 @@
 # L4D2 RCON Agent
 
-> Version: v0.1
+> Version: v0.1.1
 
 部署在游戏服务器本机的轻量 HTTP 服务，查询所有房间在线玩家（含 Steam ID）。
 
@@ -20,7 +20,7 @@ build-linux.bat
 
 ## Linux 一键部署
 
-游戏服务器上执行（需能访问 GitHub）。无需先下载脚本，一行命令搞定：
+游戏服务器上执行（需能访问 GitHub）：
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Zhrradiant/l4d2-rcon-agent/main/scripts/deploy.sh)
