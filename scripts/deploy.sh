@@ -283,6 +283,8 @@ ${CYAN}启动方式：${NC}
   ./$BINARY_NAME          # 交互式面板（首次配置/测试）
   ./$BINARY_NAME -serve   # 直接启动 HTTP 服务（后台运行可加 nohup）
 
+${CYAN}提示：${NC}若运行时提示 Permission denied，请执行 chmod +x $BINARY_NAME
+
 ${CYAN}验证服务：${NC}
   curl "http://localhost:${listen:-27051}/health"
 
