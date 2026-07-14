@@ -2,7 +2,7 @@
 
 > Version: v0.1.2
 
-部署在游戏服务器本机的轻量 HTTP 服务，查询所有房间在线玩家（含 Steam ID）。
+部署在游戏服务器本机的轻量 HTTP 服务，查询所有房间在线玩家（含 Steam ID）
 
 ## 准备
 
@@ -32,7 +32,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Zhrradiant/l4d2-rcon-agent/m
 2. 交互式询问（监听端口、Token、公网 IP、房间端口、RCON 密码）生成 `config.json`
 3. 输出启动命令（不注册 systemd 服务，按需自行配置自启）
 
-> 依赖：`curl` 或 `wget`、`tar`。卸载：删除安装目录（默认 `~/l4d2-rcon-agent`）即可，脚本不注册任何系统服务。
+> 依赖：`curl` 或 `wget`、`tar`。卸载：删除安装目录（默认 `~/l4d2-rcon-agent`）即可，脚本不注册任何系统服务
 
 ## 使用
 
@@ -57,7 +57,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Zhrradiant/l4d2-rcon-agent/m
 }
 ```
 
-> `host` 填服务器公网 IP，用于站点识别。RCON/UDP 始终连本机。
+> `host` 填服务器公网 IP，用于站点识别。RCON/UDP 始终连本机（v0.1.2支持自定义IP配置）
 
 ## 接口
 
