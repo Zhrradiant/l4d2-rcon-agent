@@ -14,7 +14,7 @@
 # Windows 产物
 build-win.bat
 
-# Linux 产物（在 Windows 上交叉编译，产物传到 Linux 服务器使用 chmod +x 即可运行）
+# Linux 产物（在 Windows 上编译，产物传到 Linux 服务器使用 chmod +x 即可运行）
 build-linux.bat
 ```
 
@@ -81,4 +81,4 @@ GET /players?token=your-token
 
 ## 原理
 
-UDP A2S_PLAYER 查玩家名指纹 → 没变就跳过 RCON → 变了才打 RCON 拿权威数据。所有房间并发查询。
+UDP A2S_PLAYER 查玩家名指纹 → 没变就跳过 RCON → 变了则通过 RCON 获取数据。所有房间并发查询
