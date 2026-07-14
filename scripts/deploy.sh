@@ -175,6 +175,10 @@ if [[ "$SKIP_CONFIG" -eq 0 ]]; then
     # 公网 IP
     read -rp "游戏服务器公网 IP（便于站点识别，可留空）: " host
 
+    # RCON 连接地址
+    read -rp "RCON/UDP 连接地址 [127.0.0.1]: " rcon_host
+    rcon_host="${rcon_host:-127.0.0.1}"
+
     # 房间端口
     echo "房间端口支持单端口(27015) 或 端口段(27015-27020)，逗号分隔"
     while true; do
@@ -259,6 +263,7 @@ if [[ "$SKIP_CONFIG" -eq 0 ]]; then
   "listen": ":${listen}",
   "token": "${token_esc}",
   "host": "${host_esc}",
+  "rcon_host": "${rcon_host}",
   "rooms": ${rooms_json}
 }
 EOF

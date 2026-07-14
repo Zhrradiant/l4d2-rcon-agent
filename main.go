@@ -42,10 +42,11 @@ type RoomConfig struct {
 }
 
 type Config struct {
-	Listen string       `json:"listen"`
-	Token  string       `json:"token"`
-	Host   string       `json:"host"`   // 游戏服务器公网 IP（便于站点识别，RCON/UDP 仍连本机）
-	Rooms  []RoomConfig `json:"rooms"`
+	Listen   string       `json:"listen"`
+	Token    string       `json:"token"`
+	Host     string       `json:"host"`      // 游戏服务器公网 IP（便于站点识别，RCON/UDP 仍连本机）
+	RCONHost string       `json:"rcon_host"` // RCON/UDP 连接地址（默认 127.0.0.1，支持自定义）
+	Rooms    []RoomConfig `json:"rooms"`
 }
 
 const configFileName = "config.json"
@@ -231,7 +232,7 @@ func newAgent(cfg *Config) *Agent {
 // 协议响应结构（剥离 4 字节包头后）：
 //   0x44 [playerCount:u8] 然后循环：index(u8) name(NULL结尾) score(int32 LE) duration(float32 LE)
 func (a *Agent) queryPlayersUDP(room RoomConfig) (names []string, newChallenge []byte, err error) {
-	addr := fmt.Sprintf("127.0.0.1:%d", room.Port)
+	addr := fmt.Sprintf("%s:%d", a.config.RCONHost, room.Port)
 	conn, err := net.Dial("udp", addr)
 	if err != nil {
 		return nil, nil, fmt.Errorf("udp dial: %w", err)
@@ -346,7 +347,7 @@ func (a *Agent) fetchRoomPlayers(room RoomConfig) ([]PlayerInfo, bool, error) {
 	// UDP 失败不致命，继续走 RCON 兜底
 
 	// 2. UDP 检测到变化（或 UDP 失败）→ 发 RCON 拿详细列表
-	rconn, err := rconDial("127.0.0.1", room.Port, room.Password, a.rconTimeout)
+	rconn, err := rconDial(a.config.RCONHost, room.Port, room.Password, a.rconTimeout)
 	if err != nil {
 		return state.players, false, fmt.Errorf("rcon: %w", err)
 	}
@@ -469,7 +470,7 @@ func loadConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	cfg := &Config{Listen: ":27051"}
+	cfg := &Config{Listen: ":27051", RCONHost: "127.0.0.1"}
 	if err := json.Unmarshal(data, cfg); err != nil {
 		return nil, err
 	}
@@ -593,6 +594,11 @@ func menuInit() {
 
 	host := readLine("游戏服务器公网 IP（便于站点识别，可留空）: ")
 
+	rconHost := readLine("RCON/UDP 连接地址 [127.0.0.1]: ")
+	if rconHost == "" {
+		rconHost = "127.0.0.1"
+	}
+
 	fmt.Println()
 	fmt.Println("配置房间端口")
 	fmt.Println("  支持单端口(27015) 或 端口段(27015-27020)，逗号分隔")
@@ -655,10 +661,11 @@ func menuInit() {
 	}
 
 	cfg := &Config{
-		Listen: listen,
-		Token:  token,
-		Host:   host,
-		Rooms:  rooms,
+		Listen:   listen,
+		Token:    token,
+		Host:     host,
+		RCONHost: rconHost,
+		Rooms:    rooms,
 	}
 
 	if err := saveConfig(cfg); err != nil {
