@@ -14,7 +14,7 @@
 # Windows 产物
 build-win.bat
 
-# Linux 产物（在 Windows 上交叉编译，产物传到 Linux 服务器赋权 chmod +x 即可运行）
+# Linux 产物（在 Windows 上交叉编译，产物传到 Linux 服务器使用 chmod +x 即可运行）
 build-linux.bat
 ```
 
